@@ -1,8 +1,9 @@
 plugins {
-	id 'de.buehmann.gradle.jubula' version '4.0.3'
+	id 'com.jfrog.bintray' version '1.5'
 }
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 
 group = 'de.buehmann.tools'
@@ -33,4 +34,42 @@ dependencies {
 	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.concrete.api:4.0.0-SNAPSHOT'
 
 	testCompile 'junit:junit:4.12'
+}
+
+publishing {
+	publications {
+		MyPublication(MavenPublication) {
+			from components.java
+			groupId project.group
+			artifactId project.name
+			version project.version
+		}
+	}
+}
+
+bintray {
+	user = project['bintray.user']
+	key = project['bintray.key']
+	publications = ['MyPublication']
+	// activate real run with false
+	dryRun = true
+	publish = true // automatically publish version after upload
+	pkg {
+		repo = 'maven'
+		name = project.name
+		userOrg = 'Raimar Bühmann'
+		licenses = ['EPL-1.0']
+		vcsUrl = 'https://github.com/OpenHelios/de.buehmann.jubula.api.runner.git'
+		labels = ['jubula', 'java', 'api', 'runner']
+		publicDownloadNumbers = true
+	}
+/*
+	version {
+		name = project.version
+		desc = 'Jubula API runner ' + project.version
+		released  = new Date()
+		vcsTag = project.version
+		// attributes = ['library': 'de.buehmann.tools:de.buehmann.jubula.api.runnner']
+	}
+*/
 }
