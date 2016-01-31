@@ -17,5 +17,20 @@ repositories {
 
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.13'
+
+	// external Jubula libraries
+	compile 'commons-lang:commons-lang:2.6'
+	compile 'com.thoughtworks.xstream:xstream:1.4.8'
+	compile 'org.apache.directory.studio:org.apache.commons.codec:1.8'
+
+	// Jubula Java API
+	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api:3.2.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api.commands:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.communication:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.tools:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.api:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.base.api:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.concrete.api:4.0.0-SNAPSHOT'
+
 	testCompile 'junit:junit:4.12'
 }

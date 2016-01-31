@@ -12,7 +12,6 @@ import org.eclipse.jubula.client.exceptions.ExecutionExceptionHandler;
 import org.eclipse.jubula.toolkit.ToolkitInfo;
 import org.eclipse.jubula.tools.AUTIdentifier;
 import org.eclipse.jubula.tools.internal.constants.AutConfigConstants;
-import org.junit.Assert;
 
 import de.buehmann.jubula.api.runner.annotation.OnTestFailure;
 import de.buehmann.jubula.api.runner.internal.ReflectionUtil;
@@ -91,7 +90,9 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 	public void startAUT() {
 		if (null != agent) {
 			final AUTIdentifier id = agent.startAUT(runnerAUTConfig);
-			Assert.assertNotNull(id);
+			if (null == id) {
+				throw new IllegalStateException("No ID from AUT start.");
+			}
 			final AUT aut = agent.getAUT(id, getToolkitInformation());
 			aut.setHandler(exceptionHandler);
 			runnerAUTConfig.getRunnerAUT().setAUT(aut);
