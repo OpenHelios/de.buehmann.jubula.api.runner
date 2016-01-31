@@ -1,2 +1,2 @@
-# de.buehmann.jubula.api.runner
+# jubula.api.runner
 Runner extension for the Jubula Java API

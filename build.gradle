@@ -1,0 +1,18 @@
+plugins {
+	id 'de.buehmann.gradle.jubula' version '4.0.3'
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	jcenter()
+	maven {
+		url 'https://repo.eclipse.org/content/repositories/jubula-snapshots/'
+	}
+}
+
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.13'
+	testCompile 'junit:junit:4.12'
+}
