@@ -124,6 +124,14 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 
 	@Override
 	public void handle(final ExecutionException e) throws ExecutionException {
+		doTestFailureAction();
+		throw e;
+	}
+
+	/**
+	 * Do test failure action defined by {@link OnTestFailure}.
+	 */
+	public void doTestFailureAction() {
 		switch (exceptionAction) {
 		case RESTART_AUT:
 			restart();
@@ -135,7 +143,6 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 		case DO_NOTHING:
 		default:
 		}
-		throw e;
 	}
 
 	private ToolkitInfo getToolkitInformation() {
