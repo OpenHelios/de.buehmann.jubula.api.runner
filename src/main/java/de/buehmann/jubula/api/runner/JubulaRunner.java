@@ -41,7 +41,7 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 	 * 
 	 * @param testClass
 	 *            The test class with a field annotated with one of
-	 *            {@link org.eclipse.jubula.api.runner.annotations.*}.
+	 *            {@code org.eclipse.jubula.api.runner.annotations.*}.
 	 */
 	public JubulaRunner(final Class<?> testClass) {
 		OnTestFailure annotation = testClass.getAnnotation(OnTestFailure.class);
