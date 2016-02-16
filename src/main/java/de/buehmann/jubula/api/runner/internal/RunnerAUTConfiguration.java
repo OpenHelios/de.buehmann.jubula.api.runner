@@ -91,7 +91,17 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	private RunnerAUTConfiguration(final ClassAUT classAUT) {
 		this(classAUT.value().getName(), classAUT.command(),
 				classAUT.workingDir().isEmpty() ? getAbsoluteJavaRootPath(classAUT.value()) : classAUT.workingDir(),
-				classAUT.args(), classAUT.agentHost(), classAUT.agentPort());
+				createAUTArgsFromClassAut(classAUT), classAUT.agentHost(), classAUT.agentPort());
+	}
+
+	private static String[] createAUTArgsFromClassAut(final ClassAUT classAUT) {
+		final String[] source = classAUT.args();
+		final String[] target = new String[source.length + 1];
+		for (int i = 1; i < target.length; i++) {
+			target[i] = source[i - 1];
+		}
+		target[0] = classAUT.value().getCanonicalName();
+		return target;
 	}
 
 	/**
