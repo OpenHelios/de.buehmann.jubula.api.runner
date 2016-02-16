@@ -95,6 +95,7 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 			}
 			final AUT aut = agent.getAUT(id, getToolkitInformation());
 			aut.setHandler(exceptionHandler);
+			aut.connect();
 			runnerAUTConfig.getRunnerAUT().setAUT(aut);
 			ReflectionUtil.setStaticField(runnerAUTConfig.getRunnerAUTField(), runnerAUTConfig.getRunnerAUT());
 		}

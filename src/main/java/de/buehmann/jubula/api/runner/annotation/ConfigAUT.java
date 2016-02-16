@@ -17,7 +17,7 @@ import org.eclipse.jubula.client.launch.AUTConfiguration;
 public @interface ConfigAUT {
 
 	/**
-	 * The path to the JAR file for the application.
+	 * The reflection class of an AUTConfiguration implementation to specify the application.
 	 */
 	Class<? extends AUTConfiguration> value();
 
