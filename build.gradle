@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 
 group = 'de.buehmann.tools'
-version = '4.0.1'
+version = '4.0.2'
 
 repositories {
 	jcenter()
