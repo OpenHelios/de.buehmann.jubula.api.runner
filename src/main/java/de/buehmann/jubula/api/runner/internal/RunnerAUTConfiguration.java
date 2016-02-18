@@ -200,32 +200,16 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 			} else if (null != nativeAUT) {
 				autConfig = new RunnerAUTConfiguration(nativeAUT);
 			} else {
-				throw new IllegalStateException("Missgin AUT annotation from package " + ClassAUT.class.getPackage().getName() + "!");
+				throw new IllegalStateException("Missing AUT annotation from package " + ClassAUT.class.getPackage().getName() + "!");
 			}
 		}
 		return autConfig;
 	}
 
 	private static String getAbsoluteJavaRootPath(final Class<?> clazz) {
-		final String packageName = clazz.getPackage().getName();
-		final int dotCount = countDots(packageName);
-		final StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < dotCount; i++) {
-			sb.append("../");
-		}
-		if (!packageName.isEmpty()) {
-			sb.append("../");
-		}
-		return clazz.getResource(sb.toString()).getPath();
-	}
-
-	private static int countDots(final String name) {
-		int result = 0;
-		for (int i = name.length() - 1; i >= 0; i--) {
-			if ('.' == name.charAt(i)) {
-				result++;
-			}
-		}
+		final String path = clazz.getResource(".").toString();
+		final String result = path.substring(path.indexOf('/'),
+				path.length() - clazz.getPackage().getName().length() - 2);
 		return result;
 	}
 
