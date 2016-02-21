@@ -20,20 +20,20 @@ public @interface JarAUT {
 	 */
 	String value();
 
-	/** The optional arguments passed to the Java application. */
-	String[] args() default "";
+	/** The arguments passed to the Java application. Default is {@code null}.*/
+	String[] args() default {};
 
-	/** The optional working directory of the Java application. */
+	/** The working directory of the Java application. Default is an empty string. */
 	String workingDir() default "";
 
-	/** The optional command, which is {@code java} as default. */
+	/** The command of the JVM. Default is {@code java}. */
 	String command() default "java";
 	
-	/** The optional host of the AUT agent. Default is {@code localhost}. */
+	/** The host of the AUT agent. Default is {@code localhost}. */
 	String agentHost() default "localhost";
 
 	/**
-	 * The optional port of the AUT agent (currently needed, because the
+	 * The port of the AUT agent (currently needed, because the
 	 * embedded AUT agent can not be started by Java API). Default is 0 for
 	 * using the embedded AUT agent.
 	 */

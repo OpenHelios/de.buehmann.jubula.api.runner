@@ -6,17 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.eclipse.jubula.client.launch.AUTConfiguration;
 import org.eclipse.jubula.toolkit.base.config.AbstractOSProcessAUTConfiguration;
 import org.eclipse.jubula.tools.internal.constants.AutConfigConstants;
 import org.eclipse.jubula.tools.internal.constants.ToolkitConstants;
 
+import de.buehmann.jubula.api.runner.JavaFXRunnerAUT;
 import de.buehmann.jubula.api.runner.RunnerAUT;
+import de.buehmann.jubula.api.runner.SwingRunnerAUT;
 import de.buehmann.jubula.api.runner.annotation.ClassAUT;
 import de.buehmann.jubula.api.runner.annotation.ConfigAUT;
 import de.buehmann.jubula.api.runner.annotation.JarAUT;
 import de.buehmann.jubula.api.runner.annotation.NativeAUT;
 
+/**
+ * A data class storing the Jubula Runner AUT configuration.
+ */
 public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 
 	private final Field autField;
@@ -24,10 +28,11 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	private final RunnerAUT runnerAUT;
 
 	/**
-	 * Constructor
+	 * Constructor for a {@link ClassAUT} based AUT configuration.
 	 * 
 	 * @param javaClass
-	 *            The java test class with an annotated Jubula field.
+	 *            The java test class with an annotated Jubula field for the
+	 *            AUT.
 	 */
 	public RunnerAUTConfiguration(final Class<?> javaClass) {
 		this(validateFields(javaClass));
@@ -37,9 +42,17 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 		this(createAutConfiguration(autField), autField);
 	}
 
-	private RunnerAUTConfiguration(final AUTConfiguration autConfiguration, final Field autField) {
-		// the dummy values are needed, because there is no copy constructor
-		super(null, "DummyID", "dummyCommand", "dummyWorkingDir", null);
+	/**
+	 * Copy constructor.
+	 * 
+	 * @param autConfiguration
+	 *            The AUT configuration to copy.
+	 * @param autField
+	 *            The field annotated with the given AUT configuration.
+	 */
+	private RunnerAUTConfiguration(final AbstractOSProcessAUTConfiguration autConfiguration, final Field autField) {
+		super(autConfiguration.getName(), autConfiguration.getAutID().getID(), autConfiguration.getCommand(),
+				autConfiguration.getWorkingDir(), autConfiguration.getArgs());
 		this.autField = autField;
 		for (final Entry<String, String> entry : autConfiguration.getLaunchInformation().entrySet()) {
 			add(entry.getKey(), entry.getValue());
@@ -69,10 +82,9 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	 * @param args
 	 *            the commands arguments
 	 * @param agentHost
-	 *            The host of the agent.
+	 *            The host of the AUT agent.
 	 * @param agentPort
-	 *            The port of the agent.
-	 * @since 4.0
+	 *            The port of the AUT agent.
 	 */
 	private RunnerAUTConfiguration(final String autID, final String command, final String workDir, final String[] args,
 			final String agentHost, final int agentPort) {
@@ -86,7 +98,6 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	/**
 	 * @param classAUT
 	 *            The class based AUT annotation.
-	 * @since 4.0
 	 */
 	private RunnerAUTConfiguration(final ClassAUT classAUT) {
 		this(classAUT.value().getName(), classAUT.command(),
@@ -107,7 +118,6 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	/**
 	 * @param jarAUT
 	 *            The JAR based AUT annotation.
-	 * @since 4.0
 	 */
 	private RunnerAUTConfiguration(final JarAUT jarAUT) {
 		this(jarAUT.value(), jarAUT.command(), jarAUT.workingDir(), addJarArgument(jarAUT.args()), jarAUT.agentHost(),
@@ -117,7 +127,6 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	/**
 	 * @param nativeAUT
 	 *            The native AUT annotation.
-	 * @since 4.0
 	 */
 	private RunnerAUTConfiguration(final NativeAUT nativeAUT) {
 		this(nativeAUT.value(), nativeAUT.value(), nativeAUT.workingDir(), nativeAUT.args(), nativeAUT.agentHost(),
@@ -125,7 +134,7 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 	}
 
 	/**
-	 * @return The annotated Jubula field holding the AUT.
+	 * @return The annotated Jubula field storing the runner AUT.
 	 */
 	public Field getRunnerAUTField() {
 		return autField;
@@ -138,17 +147,9 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 		return runnerAUT;
 	}
 
-	private static String[] addJarArgument(final String[] args) {
-		final String[] result = new String[args.length + 1];
-		result[0] = "-jar";
-		for (int i = 0; i < args.length; i++) {
-			result[i + 1] = args[i];
-		}
-		return result;
-	}
-
 	private static Field validateFields(final Class<?> testClass) {
-		final Class<?>[] annotations = new Class<?>[] { ClassAUT.class, JarAUT.class, ConfigAUT.class };
+		final Class<?>[] annotations = new Class<?>[] { ClassAUT.class, JarAUT.class, NativeAUT.class,
+				ConfigAUT.class };
 		final List<Field> fields = new ArrayList<>();
 		Class<? extends Annotation> autAnnotation = null;
 		final ReflectionUtil reflectionUtil = new ReflectionUtil(testClass);
@@ -163,7 +164,7 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 		}
 		if (1 != fields.size() || null == autAnnotation) {
 			throw new IllegalStateException(
-					"Expected exactly one field annotated with org.eclipse.jubula.api.runner.annotations.*!");
+					"Expected exactly one field annotated with " + ClassAUT.class.getPackage().getName() + ".*AUT!");
 		}
 		final Field field = fields.iterator().next();
 		if (!ReflectionUtil.isStatic(field)) {
@@ -172,16 +173,16 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 							+ " annotated with @" + autAnnotation.getName() + " must be static.");
 		}
 		final Class<?> fieldType = field.getType();
-		if (!RunnerAUT.class.isAssignableFrom(fieldType)) {
+		if (!SwingRunnerAUT.class.isAssignableFrom(fieldType) && !JavaFXRunnerAUT.class.isAssignableFrom(fieldType)) {
 			throw new IllegalStateException("Field " + field.getName() + " in class "
 					+ field.getDeclaringClass().getCanonicalName() + " annotated with @" + autAnnotation.getName()
-					+ " must have type implementing " + RunnerAUT.class.getCanonicalName() + "!");
+					+ " must have type " + RunnerAUT.class.getPackage().getName() + ".*RunnerAUT!");
 		}
 		return field;
 	}
 
-	private static AUTConfiguration createAutConfiguration(final Field autField) {
-		AUTConfiguration autConfig = null;
+	private static AbstractOSProcessAUTConfiguration createAutConfiguration(final Field autField) {
+		AbstractOSProcessAUTConfiguration autConfig = null;
 		final ConfigAUT configAUT = autField.getAnnotation(ConfigAUT.class);
 		if (null != configAUT) {
 			try {
@@ -200,16 +201,22 @@ public class RunnerAUTConfiguration extends AbstractOSProcessAUTConfiguration {
 			} else if (null != nativeAUT) {
 				autConfig = new RunnerAUTConfiguration(nativeAUT);
 			} else {
-				throw new IllegalStateException("Missing AUT annotation from package " + ClassAUT.class.getPackage().getName() + "!");
+				throw new IllegalStateException("Missing field annotated with AUT configuration!");
 			}
 		}
 		return autConfig;
 	}
 
 	private static String getAbsoluteJavaRootPath(final Class<?> clazz) {
-		final String path = clazz.getResource(".").toString();
-		final String result = path.substring(path.indexOf('/'),
-				path.length() - clazz.getPackage().getName().length() - 2);
+		return clazz.getProtectionDomain().getCodeSource().getLocation().getPath();
+	}
+
+	private static String[] addJarArgument(final String[] args) {
+		final String[] result = new String[args.length + 1];
+		result[0] = "-jar";
+		for (int i = 0; i < args.length; i++) {
+			result[i + 1] = args[i];
+		}
 		return result;
 	}
 

@@ -19,10 +19,16 @@ public @interface NativeAUT {
 	 */
 	String value();
 
-	/** The optional arguments passed to the Java application. */
-	String[] args() default "";
+	/**
+	 * The optional arguments passed to the Java application. Default is
+	 * {@code null}.
+	 */
+	String[] args() default {};
 
-	/** The optional working directory of the Java application. */
+	/**
+	 * The optional working directory of the Java application. Default is an
+	 * empty string.
+	 */
 	String workingDir() default "";
 
 	/** The optional host of the AUT agent. Default is {@code localhost}. */

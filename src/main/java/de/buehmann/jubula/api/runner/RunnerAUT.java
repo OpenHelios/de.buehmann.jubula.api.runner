@@ -7,6 +7,7 @@ import org.eclipse.jubula.client.AUT;
  * 
  * @see de.buehmann.jubula.api.runner.annotation.ClassAUT
  * @see de.buehmann.jubula.api.runner.annotation.JarAUT
+ * @see de.buehmann.jubula.api.runner.annotation.NativeAUT
  * @see de.buehmann.jubula.api.runner.annotation.ConfigAUT
  */
 public interface RunnerAUT {
@@ -28,4 +29,4 @@ public interface RunnerAUT {
 	 */
 	AUT getAUT();
 
-	}
+}
