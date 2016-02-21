@@ -8,7 +8,7 @@ apply plugin: 'maven'
 apply plugin: 'eclipse'
 
 group = 'de.buehmann.tools'
-version = '4.0.5'
+version = '4.0.6'
 
 repositories {
 	jcenter()
