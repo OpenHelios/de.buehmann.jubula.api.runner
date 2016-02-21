@@ -8,7 +8,7 @@ public class SwingRunnerAUT extends ConcreteRunnerAUT {
 
 	@Override
 	public String getToolkitId() {
-		return CommandConstants.JAVAFX_TOOLKIT;
+		return CommandConstants.SWING_TOOLKIT;
 	}
 
 }
