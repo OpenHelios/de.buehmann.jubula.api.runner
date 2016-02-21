@@ -117,7 +117,7 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 	 * Restarts the running AUT without closing the connection to the AUT agent.
 	 * It calls only {@link #stopAUT()} followed by {@link #startAUT()}.
 	 */
-	public void restart() {
+	public void restartAUT() {
 		stopAUT();
 		startAUT();
 	}
@@ -134,7 +134,7 @@ public class JubulaRunner implements ExecutionExceptionHandler {
 	public void doTestFailureAction() {
 		switch (exceptionAction) {
 		case RESTART_AUT:
-			restart();
+			restartAUT();
 			break;
 		case RESTART_AUT_AGENT_AND_AUT:
 			stop();

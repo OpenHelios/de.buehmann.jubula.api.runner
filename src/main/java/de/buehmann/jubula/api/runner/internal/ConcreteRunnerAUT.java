@@ -136,7 +136,7 @@ public abstract class ConcreteRunnerAUT implements RunnerAUT {
 	}
 
 	public void assertTextSimpleMatch(final String expectedText, final TextComponent textComponent) {
-		getAUT().execute(textComponent.checkText(expectedText, Operator.simpleMatch), "input text simple match");
+		getAUT().execute(textComponent.checkText(expectedText, Operator.simpleMatch), "text simple match");
 	}
 
 	// input text components
@@ -208,51 +208,51 @@ public abstract class ConcreteRunnerAUT implements RunnerAUT {
 	// tab component
 
 	public void selectTabByIndex(final int index, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.selectTabByIndex(index), "select text matches");
+		getAUT().execute(tabComponent.selectTabByIndex(index), "select tab by index");
 	}
 
 	public void selectTabByTitle(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.selectTabByValue(title, Operator.equals), "select tab by title");
+		getAUT().execute(tabComponent.selectTabByValue(title, Operator.equals), "select tab by title equals");
 	}
 
 	public void selectTabByTitleSimpleMatch(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.selectTabByValue(title, Operator.simpleMatch), "select tab by title");
+		getAUT().execute(tabComponent.selectTabByValue(title, Operator.simpleMatch), "select tab by title simple match");
 	}
 
 	public void selectTabByTitleMatches(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.selectTabByValue(title, Operator.matches), "select tab by title");
+		getAUT().execute(tabComponent.selectTabByValue(title, Operator.matches), "select tab by title matches");
 	}
 
 	public void assertTabSelectedByIndex(final int index, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByIndex(index, true), "select text matches");
+		getAUT().execute(tabComponent.checkSelectionOfTabByIndex(index, true), "selected tab by index");
 	}
 
 	public void assertTabSelectedByTitle(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.equals, true), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.equals, true), "selected tab by title equals");
 	}
 
 	public void assertTabSelectedByTitleSimpleMatch(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.simpleMatch, true), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.simpleMatch, true), "selected tab by title simple match");
 	}
 
 	public void assertTabSelectedByTitleMatches(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.matches, true), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.matches, true), "selected tab by title matches");
 	}
 
 	public void assertTabNotSelectedByIndex(final int index, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByIndex(index, false), "select text matches");
+		getAUT().execute(tabComponent.checkSelectionOfTabByIndex(index, false), "not selected tab by index");
 	}
 
 	public void assertTabNotSelectedByTitle(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.equals, false), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.equals, false), "not selected tab by title equals");
 	}
 
 	public void assertTabNotSelectedByTitleSimpleMatch(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.simpleMatch, false), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.simpleMatch, false), "not selected tab by title simple match");
 	}
 
 	public void assertTabNotSelectedByTitleMatches(final String title, final TabComponent tabComponent) {
-		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.matches, false), "select tab by title");
+		getAUT().execute(tabComponent.checkSelectionOfTabByValue(title, Operator.matches, false), "not selected tab by title matches");
 	}
 
 }
