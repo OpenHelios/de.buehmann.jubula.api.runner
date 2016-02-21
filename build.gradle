@@ -4,10 +4,11 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+apply plugin: 'maven'
 apply plugin: 'eclipse'
 
 group = 'de.buehmann.tools'
-version = '4.0.4'
+version = '4.0.5'
 
 repositories {
 	jcenter()
@@ -34,6 +35,13 @@ dependencies {
 	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.concrete.api:4.0.0-SNAPSHOT'
 
 	testCompile 'junit:junit:4.12'
+}
+
+test {
+	testLogging {
+		events 'passed', 'skipped', 'failed'
+		exceptionFormat = 'full'
+	}
 }
 
 task sourcesJar(type: Jar) {
@@ -80,4 +88,14 @@ bintray {
 */
 }
 
+// repository for local tests
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: uri('../repo'))
+		}
+	}
+}
+
 // publish: gradle bintrayUpload
+// @see http://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency/en
