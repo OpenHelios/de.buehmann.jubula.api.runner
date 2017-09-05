@@ -1,38 +1,50 @@
 plugins {
-	id 'com.jfrog.bintray' version '1.5'
+	id 'com.jfrog.bintray' version '1.7.3'
 }
 
 apply plugin: 'java'
+// avoid wrong runtime dependencies
+apply plugin: 'java-library'
+// publishing to maven repository
 apply plugin: 'maven-publish'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
 group = 'de.buehmann.tools'
-version = '4.0.6'
+version = '4.1.0'
+
+def Properties properties = new Properties()
+properties.load(new FileInputStream(project.file('local.properties')))
 
 repositories {
 	jcenter()
 	maven {
 		url 'https://repo.eclipse.org/content/repositories/jubula-snapshots/'
 	}
+/*
+	maven {
+		url file('../repo')
+	}
+*/
 }
 
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.13'
-
-	// external Jubula libraries
-	compile 'commons-lang:commons-lang:2.6'
-	compile 'com.thoughtworks.xstream:xstream:1.4.8'
-	compile 'org.apache.directory.studio:org.apache.commons.codec:1.8'
+	compile 'org.slf4j:slf4j-api:1.7.25'
 
 	// Jubula Java API
-	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api:3.2.0-SNAPSHOT'
-	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api.commands:4.0.0-SNAPSHOT'
-	compile 'org.eclipse.jubula:org.eclipse.jubula.communication:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api:3.3.0-SNAPSHOT'
 	compile 'org.eclipse.jubula:org.eclipse.jubula.tools:4.0.0-SNAPSHOT'
 	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.api:4.0.0-SNAPSHOT'
-	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.base.api:4.0.0-SNAPSHOT'
-	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.concrete.api:4.0.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.base.api:4.1.0-SNAPSHOT'
+	compile 'org.eclipse.jubula:org.eclipse.jubula.toolkit.concrete.api:4.1.0-SNAPSHOT'
+	// * indirect dependencies
+	compile 'org.eclipse.jubula:org.eclipse.jubula.communication:5.0.0-SNAPSHOT'
+//	compile 'org.eclipse.jubula:org.eclipse.jubula.client.api.commands:4.0.0-SNAPSHOT'
+
+	// * external Jubula libraries
+	compile 'commons-lang:commons-lang:2.6'
+	compile 'com.thoughtworks.xstream:xstream:1.4.10'
+//	compile 'org.apache.directory.studio:org.apache.commons.codec:1.8'
 
 	testCompile 'junit:junit:4.12'
 }
@@ -49,6 +61,33 @@ task sourcesJar(type: Jar) {
 	classifier 'sources'
 }
 
+bintray {
+	user = properties.getProperty('bintray.user')
+	key = properties.getProperty('bintray.key')
+	publications = ['MyPublication']
+	// activate real run with false
+	dryRun = false
+	publish = true // automatically publish version after upload
+	pkg {
+		repo = 'maven'
+		name = project.name
+		userOrg = 'raimar'
+		licenses = ['EPL-1.0']
+		websiteUrl = project.getProperty('websiteUrl')
+		issueTrackerUrl = project.getProperty('websiteUrl') + '/issues'
+		vcsUrl = project.getProperty('websiteUrl') + '.git'
+		labels = ['jubula', 'java', 'api', 'runner']
+		publicDownloadNumbers = true
+		version {
+			name = project.version
+			desc = 'Jubula Java API runner ' + project.version
+			released  = new Date()
+			// vcsTag = project.version
+			// attributes = ['library': 'de.buehmann.tools:de.buehmann.jubula.api.runnner']
+		}
+	}
+}
+
 publishing {
 	publications {
 		MyPublication(MavenPublication) {
@@ -61,33 +100,6 @@ publishing {
 	}
 }
 
-bintray {
-	user = project['bintray.user']
-	key = project['bintray.key']
-	publications = ['MyPublication']
-	// activate real run with false
-	dryRun = true
-	publish = true // automatically publish version after upload
-	pkg {
-		repo = 'maven'
-		name = project.name
-		userOrg = 'raimar'
-		licenses = ['EPL-1.0']
-		vcsUrl = 'https://github.com/OpenHelios/de.buehmann.jubula.api.runner.git'
-		labels = ['jubula', 'java', 'api', 'runner']
-		publicDownloadNumbers = true
-	}
-/*
-	version {
-		name = project.version
-		desc = 'Jubula API runner ' + project.version
-		released  = new Date()
-		vcsTag = project.version
-		// attributes = ['library': 'de.buehmann.tools:de.buehmann.jubula.api.runnner']
-	}
-*/
-}
-
 // repository for local tests
 uploadArchives {
 	repositories {
@@ -98,4 +110,4 @@ uploadArchives {
 }
 
 // publish: gradle bintrayUpload
-// @see http://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency/en
+// @see https://github.com/bintray/gradle-bintray-plugin#readme
